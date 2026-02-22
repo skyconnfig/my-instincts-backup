@@ -1,0 +1,18 @@
+---
+version: "2.0"
+exported_by: "continuous-learning-v2"
+export_date: "2026-02-22T09:30:00Z"
+---
+
+instincts:
+  - id: project-retrospective-workflow
+    trigger: "when user asks for retrospective or lesson learned"
+    confidence: 0.9
+    domain: workflow
+    source: retrospective-session-2026-02-07
+
+  - id: fullstack-development-principles
+    trigger: "when starting a full-stack development project"
+    confidence: 0.85
+    domain: workflow
+    source: retrospective-2026-02-07
