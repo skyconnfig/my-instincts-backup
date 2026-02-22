@@ -1,7 +1,7 @@
 ---
-version: "2.1"
+version: "2.2"
 exported_by: "continuous-learning-v2"
-export_date: "2026-02-22T17:35:00Z"
+export_date: "2026-02-22T17:50:00Z"
 source_session: "ses_37b598752ffe8cyf5D822PNSSN"
 ---
 
@@ -24,6 +24,47 @@ instincts:
     domain: workflow
     source: retrospective_2026_02_07
 
+  # === Git 操作本能 ===
+
+  - id: git-initialization-workflow
+    trigger: "用户想要初始化git仓库并推送到GitHub"
+    action: |
+      完整流程：
+      1. git init 初始化仓库
+      2. 创建 .gitignore 文件
+      3. git add . && git commit 首次提交
+      4. 用户提供 GitHub URL
+      5. git remote add origin <url>
+      6. git push -u origin main
+    confidence: 0.95
+    domain: git
+    evidence: 用户多次执行初始化、提交、推送流程
+
+  - id: git-large-file-handling
+    trigger: "推送大文件或大量文件时遇到超时"
+    action: |
+      解决方案：
+      1. git lfs install 安装 LFS
+      2. git lfs track "*.mp3" "*.wav" "*.exe" 等
+      3. 创建 .gitattributes
+      4. 重新提交 (git add .gitattributes && git commit --amend)
+      5. git push -u origin main
+    confidence: 0.9
+    domain: git
+    evidence: 用户推送896MB音频文件时使用LFS解决超时问题
+
+  - id: github-repo-creation
+    trigger: "用户想推送代码但没有GitHub仓库"
+    action: |
+      流程：
+      1. 询问用户 GitHub 用户名或仓库 URL
+      2. 用户提供 URL 后 git remote add origin <url>
+      3. git push -u origin main
+      4. 验证推送结果
+    confidence: 0.9
+    domain: git
+    evidence: 用户创建了 https://github.com/skyconnfig/yinyue
+
   # === 学习与成长本能 ===
 
   - id: user-learning-preferences
@@ -34,7 +75,7 @@ instincts:
       2. 使用 /instinct-export 导出备份
       3. 保存到 GitHub 私有仓库
       4. 使用 /instinct-import 恢复
-    confidence: 0.9
+    confidence: 0.95
     domain: workflow
     evidence: 用户明确表达想要备份和恢复学习经验的需求
 
@@ -45,7 +86,7 @@ instincts:
       使用 session_read 读取每个 session 的详细内容
       分析用户行为模式、工作流偏好、工具使用习惯
       提取关键信息并总结
-    confidence: 0.85
+    confidence: 0.9
     domain: workflow
     evidence: 用户明确要求扫描历史 session 并提取使用习惯
 
@@ -58,9 +99,9 @@ instincts:
       3. git add . 
       4. git commit -m "Backup $(date)"
       5. git push
-    confidence: 0.9
+    confidence: 0.95
     domain: workflow
-    evidence: 用户提供了具体的 GitHub 仓库 URL
+    evidence: 用户提供了具体的 GitHub 仓库 URL 并成功备份
 
   # === 技术分析本能 ===
 
@@ -131,6 +172,20 @@ instincts:
     domain: workflow
     evidence: 多步骤任务必须用 todo 跟踪以保证可见性和恢复能力
 
+  # === 项目管理本能 ===
+
+  - id: project-file-organization
+    trigger: "用户有大量音频/媒体文件需要管理"
+    action: |
+      建议方案：
+      1. 按用途分类目录（暖场、倒计时、上场、颁奖等）
+      2. 使用 Git LFS 存储大文件
+      3. 创建 README.md 说明目录结构
+      4. .gitignore 忽略临时文件和系统文件
+    confidence: 0.85
+    domain: project_management
+    evidence: 用户有大量音频文件需要版本控制
+
 # === 用户偏好 ===
 
 preferences:
@@ -138,6 +193,7 @@ preferences:
     - 简洁直接，不说废话
     - 直接开始工作，不用事先汇报
     - 用 todo 跟踪进度而非状态更新
+    - 喜欢用数字选项让用户选择（1、2、3）
   
   code_quality:
     - 永远不使用 as any / @ts-ignore 抑制类型错误
@@ -153,6 +209,11 @@ preferences:
     - 构建命令必须 exit code 0
     - 测试必须 pass
 
+  git:
+    - 推送失败时考虑使用 Git LFS
+    - 重视 .gitignore 配置
+    - 喜欢创建 README 文档
+
 # === 学习到的模式 ===
 
 learned_patterns:
@@ -164,29 +225,29 @@ learned_patterns:
   - 用户想要建立可积累、可传承的经验系统
   - 用户对逆向工程和分析有兴趣（APK反编译）
   - 用户关注长期经验积累和备份
+  - 用户经常处理音频/视频文件
+  - 用户使用 GitHub 作为主要代码托管平台
+  - 用户有 skyconnfig GitHub 账号
 
 # === 元信息 ===
 
 meta:
-  version: "2.1"
-  total_instincts: 11
+  version: "2.2"
+  total_instincts: 14
   created_at: "2026-02-22T09:30:00Z"
-  last_updated: "2026-02-22T17:35:00Z"
+  last_updated: "2026-02-22T17:50:00Z"
   backup_source: "OpenCode Session Analysis"
   github_repo: "https://github.com/skyconnfig/my-instincts-backup"
   
   # 更新日志
   changelog:
-    - version: "2.1"
+    - version: "2.2"
       date: "2026-02-22"
       changes:
-        - 新增用户学习偏好本能
-        - 新增session分析本能
-        - 新增GitHub备份工作流本能
-        - 新增技术深度分析本能
-        - 新增APK逆向工程本能
-        - 新增意图分类本能
-        - 新增并行执行本能
-        - 新增TODO管理本能
-        - 添加用户偏好说明
-        - 添加学习模式总结
+        - 新增 Git 初始化工作流本能
+        - 新增大文件处理本能（Git LFS）
+        - 新增 GitHub 仓库创建本能
+        - 新增项目文件组织本能
+        - 更新用户偏好：添加数字选项偏好、Git 相关偏好
+        - 更新学习模式：添加音频文件处理、GitHub 使用习惯
+        - 总本能数量：11 → 14
